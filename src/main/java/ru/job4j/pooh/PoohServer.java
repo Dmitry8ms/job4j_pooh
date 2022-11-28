@@ -26,7 +26,8 @@ public class PoohServer {
                          InputStream input = socket.getInputStream()) {
                         byte[] buff = new byte[1_000_000];
                         var total = input.read(buff);
-                        var content = new String(Arrays.copyOfRange(buff, 0, total), StandardCharsets.UTF_8);
+                        var content = new String(Arrays.copyOfRange(buff, 0, total),
+                                StandardCharsets.UTF_8);
                         var req = Req.of(content);
                         var resp = modes.get(req.getPoohMode()).process(req);
                         String ls = System.lineSeparator();
