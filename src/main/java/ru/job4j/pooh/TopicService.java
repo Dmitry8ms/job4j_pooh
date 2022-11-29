@@ -19,8 +19,21 @@ public class TopicService implements Service {
                         mapQueue.get(entry.getKey()).add(req.getParam());
                 }
             } else {
-                result = new Resp("No Subscribers", "400");
+                result = new Resp("No Subscribers to post", "400");
             }
+        } else if ("GET".equals(req.httpRequestType())) {
+            mapMap.putIfAbsent(req.getSourceName(), new ConcurrentHashMap<>());
+            mapMap.get(req.getSourceName()).putIfAbsent(req.getParam(),
+                    new ConcurrentLinkedQueue<>());
+            var queue = mapMap.get(req.getSourceName()).get(req.getParam());
+            var text = queue.peek();
+            if (text != null) {
+                result = new Resp(text, "200");
+            } else {
+                result = new Resp(req.getParam() + " subscribed", "201");
+            }
+        } else {
+            throw new IllegalArgumentException("Unknown request type");
         }
         return result;
     }

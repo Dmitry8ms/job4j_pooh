@@ -13,24 +13,57 @@ public class TopicServiceTest {
         String paramForPublisher = "temperature=18";
         String paramForSubscriber1 = "client407";
         String paramForSubscriber2 = "client6565";
-        /* Режим topic. Подписываемся на топик weather. client407. */
         topicService.process(
                 new Req("GET", "topic", "weather", paramForSubscriber1)
         );
-        /* Режим topic. Добавляем данные в топик weather. */
         topicService.process(
                 new Req("POST", "topic", "weather", paramForPublisher)
         );
-        /* Режим topic. Забираем данные из индивидуальной очереди в топике weather. Очередь client407. */
         Resp result1 = topicService.process(
                 new Req("GET", "topic", "weather", paramForSubscriber1)
         );
-        /* Режим topic. Забираем данные из индивидуальной очереди в топике weather. Очередь client6565.
-        Очередь отсутствует, т.к. еще не был подписан - получит пустую строку */
         Resp result2 = topicService.process(
                 new Req("GET", "topic", "weather", paramForSubscriber2)
         );
         assertThat(result1.text(), is("temperature=18"));
-        assertThat(result2.text(), is(""));
+        assertThat(result2.text(), is("client6565 subscribed"));
+    }
+
+    @Test
+    public void whenTopicPostWithoutSubscriber() {
+        String paramForPublisher = "temperature=18";
+        TopicService topicService = new TopicService();
+        Resp result = topicService.process(
+                new Req("POST", "topic", "weather", paramForPublisher)
+        );
+        assertThat(result.text(), is("No Subscribers to post"));
+    }
+
+    @Test
+    public void whenTopicAndManySubscribers() {
+        TopicService topicService = new TopicService();
+        String paramForPublisher = "temperature=18";
+        String paramForSubscriber1 = "client407";
+        String paramForSubscriber2 = "client6565";
+        Resp result1 = topicService.process(
+                new Req("GET", "topic", "weather", paramForSubscriber1)
+        );
+        Resp result2 = topicService.process(
+                new Req("GET", "topic", "weather", paramForSubscriber2)
+        );
+        Resp result3 = topicService.process(
+                new Req("POST", "topic", "weather", paramForPublisher)
+        );
+        Resp result4 = topicService.process(
+                new Req("GET", "topic", "weather", paramForSubscriber1)
+        );
+        Resp result5 = topicService.process(
+                new Req("GET", "topic", "weather", paramForSubscriber2)
+        );
+        assertThat(result1.text(), is("client407 subscribed"));
+        assertThat(result2.text(), is("client6565 subscribed"));
+        assertThat(result3.text(), is("OK"));
+        assertThat(result4.text(), is("temperature=18"));
+        assertThat(result5.text(), is("temperature=18"));
     }
 }

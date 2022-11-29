@@ -23,7 +23,7 @@ public class QueueService implements Service {
                 result = new Resp("", "204");
             }
         } else {
-            throw new IllegalArgumentException("Wrong request type!");
+            throw new IllegalArgumentException("Unknown request type");
         }
         return result;
     }

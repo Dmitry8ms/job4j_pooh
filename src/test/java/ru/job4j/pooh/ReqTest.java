@@ -70,4 +70,22 @@ public class ReqTest {
         assertThat(req.getSourceName(), is("weather"));
         assertThat(req.getParam(), is("client407"));
     }
+
+    @Test
+    public void whenTopicModeGetMethodSubscribe() {
+        String ls = System.lineSeparator();
+        String content = "GET /topic/weather HTTP/1.1" + ls
+                + "Host: localhost:9000" + ls
+                + "User-Agent: curl/7.72.0" + ls
+                + "Accept: */*" + ls +
+                "Content-Length: 14" + ls +
+                "Content-Type: application/x-www-form-urlencoded" + ls +
+                "" + ls +
+                "client407" + ls;
+        Req req = Req.of(content);
+        assertThat(req.httpRequestType(), is("GET"));
+        assertThat(req.getPoohMode(), is("topic"));
+        assertThat(req.getSourceName(), is("weather"));
+        assertThat(req.getParam(), is("client407"));
+    }
 }

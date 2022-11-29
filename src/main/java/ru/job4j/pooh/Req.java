@@ -25,7 +25,11 @@ public class Req {
         if ("POST".equals(httpRequestType)) {
             param = lines[lines.length - 1].trim();
         } else if ("GET".equals(httpRequestType) && "topic".equals(poohMode)) {
-            param = words[3];
+            if (words.length == 4) {
+                param = words[3];
+            } else {
+                param = lines[lines.length - 1].trim();
+            }
         }
         return new Req(httpRequestType, poohMode, sourceName, param);
     }
