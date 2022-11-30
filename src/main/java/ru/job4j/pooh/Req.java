@@ -34,6 +34,28 @@ public class Req {
         return new Req(httpRequestType, poohMode, sourceName, param);
     }
 
+    private String parseStartingLine(String content) {
+        String[] lines = content.split("\\R");
+        return lines[0];
+    }
+
+    private String parseMethod(String startingLine) {
+        String[] chunks = startingLine.split(" ");
+        return chunks[0];
+    }
+
+    private String parseMode(String startingLine) {
+        String[] chunks = startingLine.split(" ");
+        String[] words = chunks[1].split("/");
+        return words[1];
+    }
+
+    private String parseTheme(String startingLine) {
+        String[] chunks = startingLine.split(" ");
+        String[] words = chunks[1].split("/");
+        return words[2];
+    }
+
     public String httpRequestType() {
         return httpRequestType;
     }
