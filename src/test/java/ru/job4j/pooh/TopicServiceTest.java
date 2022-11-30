@@ -66,4 +66,26 @@ public class TopicServiceTest {
         assertThat(result4.text(), is("temperature=18"));
         assertThat(result5.text(), is("temperature=18"));
     }
+
+    @Test
+    public void whenEmptiedQueueThanNoText() {
+        TopicService topicService = new TopicService();
+        String paramForPublisher = "temperature=18";
+        String paramForSubscriber = "client407";
+        Resp result1 = topicService.process(
+                new Req("GET", "topic", "weather", paramForSubscriber)
+        );
+        topicService.process(
+                new Req("POST", "topic", "weather", paramForPublisher)
+        );
+        Resp result2 = topicService.process(
+                new Req("GET", "topic", "weather", paramForSubscriber)
+        );
+        Resp result3 = topicService.process(
+                new Req("GET", "topic", "weather", paramForSubscriber)
+        );
+        assertThat(result1.text(), is("client407 subscribed"));
+        assertThat(result2.text(), is("temperature=18"));
+        assertThat(result3.text(), is(""));
+    }
 }

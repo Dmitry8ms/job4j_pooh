@@ -23,14 +23,17 @@ public class TopicService implements Service {
             }
         } else if ("GET".equals(req.httpRequestType())) {
             mapMap.putIfAbsent(req.getSourceName(), new ConcurrentHashMap<>());
-            mapMap.get(req.getSourceName()).putIfAbsent(req.getParam(),
+            var mapQueue = mapMap.get(req.getSourceName());
+                    var nullIfRegistered = mapQueue.putIfAbsent(req.getParam(),
                     new ConcurrentLinkedQueue<>());
             var queue = mapMap.get(req.getSourceName()).get(req.getParam());
-            var text = queue.peek();
+            var text = queue.poll();
             if (text != null) {
                 result = new Resp(text, "200");
-            } else {
+            } else if (nullIfRegistered == null) {
                 result = new Resp(req.getParam() + " subscribed", "201");
+            } else {
+                result = new Resp("", "204");
             }
         } else {
             throw new IllegalArgumentException("Unknown request type");

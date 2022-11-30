@@ -15,42 +15,44 @@ public class Req {
     }
 
     public static Req of(String content) {
-        String[] lines = content.split("\\R");
-        String[] parses = lines[0].split(" ");
-        String[] words = parses[1].split("/");
-        String httpRequestType = parses[0];
-        String poohMode = words[1];
-        String sourceName = words[2];
-        String param = "";
-        if ("POST".equals(httpRequestType)) {
-            param = lines[lines.length - 1].trim();
-        } else if ("GET".equals(httpRequestType) && "topic".equals(poohMode)) {
-            if (words.length == 4) {
-                param = words[3];
-            } else {
-                param = lines[lines.length - 1].trim();
-            }
-        }
-        return new Req(httpRequestType, poohMode, sourceName, param);
+        String starlingLine = parseStartingLine(content);
+        String httpRequestType = parseMethod(starlingLine);
+        String poohMode = parseMode(starlingLine);
+        return new Req(httpRequestType, poohMode, parseTheme(starlingLine),
+                parseParam(content, httpRequestType, poohMode));
     }
 
-    private String parseStartingLine(String content) {
+    private static String parseStartingLine(String content) {
         String[] lines = content.split("\\R");
         return lines[0];
     }
 
-    private String parseMethod(String startingLine) {
+    private static String parseParam(String content, String httpRequestType, String poohMode) {
+        String[] lines = content.split("\\R");
+        String[] parses = lines[0].split(" ");
+        String[] words = parses[1].split("/");
+        String param = lines[lines.length - 1].trim();
+        if (("GET".equals(httpRequestType) && "queue".equals(poohMode))) {
+            param = "";
+        }
+        if (words.length == 4) {
+            param = words[words.length - 1];
+        }
+        return param;
+    }
+
+    private static String parseMethod(String startingLine) {
         String[] chunks = startingLine.split(" ");
         return chunks[0];
     }
 
-    private String parseMode(String startingLine) {
+    private static String parseMode(String startingLine) {
         String[] chunks = startingLine.split(" ");
         String[] words = chunks[1].split("/");
         return words[1];
     }
 
-    private String parseTheme(String startingLine) {
+    private static String parseTheme(String startingLine) {
         String[] chunks = startingLine.split(" ");
         String[] words = chunks[1].split("/");
         return words[2];
