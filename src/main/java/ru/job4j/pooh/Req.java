@@ -6,6 +6,7 @@ public class Req {
     private final String poohMode;
     private final String sourceName;
     private final String param;
+    private final static int TOPICPARAM = 4;
 
     public Req(String httpRequestType, String poohMode, String sourceName, String param) {
         this.httpRequestType = httpRequestType;
@@ -15,10 +16,10 @@ public class Req {
     }
 
     public static Req of(String content) {
-        String starlingLine = parseStartingLine(content);
-        String httpRequestType = parseMethod(starlingLine);
-        String poohMode = parseMode(starlingLine);
-        return new Req(httpRequestType, poohMode, parseTheme(starlingLine),
+        String startingLine = parseStartingLine(content);
+        String httpRequestType = parseMethod(startingLine);
+        String poohMode = parseMode(startingLine);
+        return new Req(httpRequestType, poohMode, parseTheme(startingLine),
                 parseParam(content, httpRequestType, poohMode));
     }
 
@@ -32,10 +33,10 @@ public class Req {
         String[] parses = lines[0].split(" ");
         String[] words = parses[1].split("/");
         String param = lines[lines.length - 1].trim();
-        if (("GET".equals(httpRequestType) && "queue".equals(poohMode))) {
+        if ((HttpRequestType.GET.value().equals(httpRequestType) && PoohMode.QUEUE.value().equals(poohMode))) {
             param = "";
         }
-        if (words.length == 4) {
+        if (words.length == TOPICPARAM) {
             param = words[words.length - 1];
         }
         return param;

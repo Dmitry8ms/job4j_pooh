@@ -14,16 +14,16 @@ public class TopicServiceTest {
         String paramForSubscriber1 = "client407";
         String paramForSubscriber2 = "client6565";
         topicService.process(
-                new Req("GET", "topic", "weather", paramForSubscriber1)
+                new Req(HttpRequestType.GET.value(), PoohMode.TOPIC.value(), "weather", paramForSubscriber1)
         );
         topicService.process(
-                new Req("POST", "topic", "weather", paramForPublisher)
+                new Req(HttpRequestType.POST.value(), PoohMode.TOPIC.value(), "weather", paramForPublisher)
         );
         Resp result1 = topicService.process(
-                new Req("GET", "topic", "weather", paramForSubscriber1)
+                new Req(HttpRequestType.GET.value(), PoohMode.TOPIC.value(), "weather", paramForSubscriber1)
         );
         Resp result2 = topicService.process(
-                new Req("GET", "topic", "weather", paramForSubscriber2)
+                new Req(HttpRequestType.GET.value(), PoohMode.TOPIC.value(), "weather", paramForSubscriber2)
         );
         assertThat(result1.text(), is("temperature=18"));
         assertThat(result2.text(), is("client6565 subscribed"));
@@ -34,7 +34,7 @@ public class TopicServiceTest {
         String paramForPublisher = "temperature=18";
         TopicService topicService = new TopicService();
         Resp result = topicService.process(
-                new Req("POST", "topic", "weather", paramForPublisher)
+                new Req(HttpRequestType.POST.value(), PoohMode.TOPIC.value(), "weather", paramForPublisher)
         );
         assertThat(result.text(), is("No Subscribers to post"));
     }
@@ -46,19 +46,19 @@ public class TopicServiceTest {
         String paramForSubscriber1 = "client407";
         String paramForSubscriber2 = "client6565";
         Resp result1 = topicService.process(
-                new Req("GET", "topic", "weather", paramForSubscriber1)
+                new Req(HttpRequestType.GET.value(), PoohMode.TOPIC.value(), "weather", paramForSubscriber1)
         );
         Resp result2 = topicService.process(
-                new Req("GET", "topic", "weather", paramForSubscriber2)
+                new Req(HttpRequestType.GET.value(), PoohMode.TOPIC.value(), "weather", paramForSubscriber2)
         );
         Resp result3 = topicService.process(
-                new Req("POST", "topic", "weather", paramForPublisher)
+                new Req(HttpRequestType.POST.value(), PoohMode.TOPIC.value(), "weather", paramForPublisher)
         );
         Resp result4 = topicService.process(
-                new Req("GET", "topic", "weather", paramForSubscriber1)
+                new Req(HttpRequestType.GET.value(), PoohMode.TOPIC.value(), "weather", paramForSubscriber1)
         );
         Resp result5 = topicService.process(
-                new Req("GET", "topic", "weather", paramForSubscriber2)
+                new Req(HttpRequestType.GET.value(), PoohMode.TOPIC.value(), "weather", paramForSubscriber2)
         );
         assertThat(result1.text(), is("client407 subscribed"));
         assertThat(result2.text(), is("client6565 subscribed"));
@@ -73,16 +73,16 @@ public class TopicServiceTest {
         String paramForPublisher = "temperature=18";
         String paramForSubscriber = "client407";
         Resp result1 = topicService.process(
-                new Req("GET", "topic", "weather", paramForSubscriber)
+                new Req(HttpRequestType.GET.value(), PoohMode.TOPIC.value(), "weather", paramForSubscriber)
         );
         topicService.process(
-                new Req("POST", "topic", "weather", paramForPublisher)
+                new Req(HttpRequestType.POST.value(), PoohMode.TOPIC.value(), "weather", paramForPublisher)
         );
         Resp result2 = topicService.process(
-                new Req("GET", "topic", "weather", paramForSubscriber)
+                new Req(HttpRequestType.GET.value(), PoohMode.TOPIC.value(), "weather", paramForSubscriber)
         );
         Resp result3 = topicService.process(
-                new Req("GET", "topic", "weather", paramForSubscriber)
+                new Req(HttpRequestType.GET.value(), PoohMode.TOPIC.value(), "weather", paramForSubscriber)
         );
         assertThat(result1.text(), is("client407 subscribed"));
         assertThat(result2.text(), is("temperature=18"));
