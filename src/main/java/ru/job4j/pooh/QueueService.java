@@ -9,22 +9,23 @@ public class QueueService implements Service {
 
     @Override
     public Resp process(Req req) {
-        Resp result = new Resp("OK", StatusCodes.OK_200.code());
+        String text;
+        if (!HttpRequestType.POST.value().equals(req.httpRequestType())
+               && !HttpRequestType.GET.value().equals(req.httpRequestType())) {
+            throw new IllegalArgumentException("Unknown request type");
+        }
         if (HttpRequestType.POST.value().equals(req.httpRequestType())) {
             mapQueue.putIfAbsent(req.getSourceName(), new ConcurrentLinkedQueue<>());
             mapQueue.get(req.getSourceName()).add(req.getParam());
-        } else if (HttpRequestType.GET.value().equals(req.httpRequestType())) {
+            return new Resp("OK", StatusCodes.OK_200.code());
+        } else {
             mapQueue.putIfAbsent(req.getSourceName(), new ConcurrentLinkedQueue<>());
             var queue = mapQueue.get(req.getSourceName());
-            var text = queue.poll();
-            if (text != null) {
-                result = new Resp(text, StatusCodes.OK_200.code());
-            } else {
-                result = new Resp("", StatusCodes.NO_CONTENT_204.code());
+            text = queue.poll();
+            if (text == null) {
+                return new Resp("", StatusCodes.NO_CONTENT_204.code());
             }
-        } else {
-            throw new IllegalArgumentException("Unknown request type");
         }
-        return result;
+        return new Resp(text, StatusCodes.OK_200.code());
     }
 }
