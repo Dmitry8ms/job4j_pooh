@@ -5,8 +5,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 public class TopicService implements Service {
-    private final ConcurrentHashMap<String,
-            ConcurrentHashMap<String, ConcurrentLinkedQueue<String>>> mapMap =
+    private final Map<String, ConcurrentHashMap<String, ConcurrentLinkedQueue<String>>> mapMap =
             new ConcurrentHashMap<>();
     @Override
     public Resp process(Req req) {
