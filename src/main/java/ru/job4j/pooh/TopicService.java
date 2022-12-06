@@ -1,11 +1,12 @@
 package ru.job4j.pooh;
 
 import java.util.Map;
+import java.util.Queue;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 public class TopicService implements Service {
-    private final Map<String, ConcurrentHashMap<String, ConcurrentLinkedQueue<String>>> mapMap =
+    private final Map<String, Map<String, Queue<String>>> mapMap =
             new ConcurrentHashMap<>();
     @Override
     public Resp process(Req req) {
@@ -19,7 +20,7 @@ public class TopicService implements Service {
             if (null == mapQueue) {
                 return new Resp("No Subscribers to post", StatusCodes.BAD_REQUEST_400.code());
             }
-            for (Map.Entry<String, ConcurrentLinkedQueue<String>> entry : mapQueue.entrySet()) {
+            for (Map.Entry<String, Queue<String>> entry : mapQueue.entrySet()) {
                 mapQueue.get(entry.getKey()).add(req.getParam());
             }
             return new Resp("OK", StatusCodes.OK_200.code());

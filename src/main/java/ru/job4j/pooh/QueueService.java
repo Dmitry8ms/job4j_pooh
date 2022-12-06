@@ -1,11 +1,12 @@
 package ru.job4j.pooh;
 
 import java.util.Map;
+import java.util.Queue;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 public class QueueService implements Service {
-    private final Map<String, ConcurrentLinkedQueue<String>> mapQueue = new ConcurrentHashMap<>();
+    private final Map<String, Queue<String>> mapQueue = new ConcurrentHashMap<>();
 
     @Override
     public Resp process(Req req) {

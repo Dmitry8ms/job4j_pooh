@@ -6,11 +6,12 @@ import java.net.Socket;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 public class PoohServer {
-    private final HashMap<String, Service> modes = new HashMap<>();
+    private final Map<String, Service> modes = new HashMap<>();
 
     public void start() {
         modes.put("queue", new QueueService());
